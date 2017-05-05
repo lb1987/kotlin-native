@@ -1088,7 +1088,7 @@ internal class IrDeserializer(val context: Context,
             is PropertySetterDescriptor -> {
                 (rootMember as DeserializedPropertyDescriptor).proto.setterIr
             }
-            else -> error("Unexpected descriptor: rootFunction")
+            else -> error("Unexpected descriptor: $rootFunction")
         }
 
     fun decodeDeclaration(): IrDeclaration {

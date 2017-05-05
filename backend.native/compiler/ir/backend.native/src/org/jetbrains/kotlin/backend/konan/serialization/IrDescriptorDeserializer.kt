@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.backend.konan.Context
 import org.jetbrains.kotlin.backend.konan.KonanIrDeserializationException
 import org.jetbrains.kotlin.backend.konan.descriptors.contributedMethods
 import org.jetbrains.kotlin.backend.konan.descriptors.isFunctionInvoke
+import org.jetbrains.kotlin.backend.konan.descriptors.findPackage
 import org.jetbrains.kotlin.backend.konan.llvm.isExported
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation
@@ -36,17 +37,11 @@ import org.jetbrains.kotlin.serialization.deserialization.NameResolverImpl
 import org.jetbrains.kotlin.serialization.deserialization.descriptors.*
 import org.jetbrains.kotlin.types.*
 
-internal fun DeclarationDescriptor.findPackage(): PackageFragmentDescriptor {
-    return if (this is PackageFragmentDescriptor) this 
-        else this.containingDeclaration!!.findPackage()
-}
-
 internal fun DeserializedMemberDescriptor.nameTable(): ProtoBuf.QualifiedNameTable {
     val pkg = this.findPackage()
     assert(pkg is KonanPackageFragment)
     return (pkg as KonanPackageFragment).proto.getNameTable()
 }
-
 
 internal fun DeserializedMemberDescriptor.nameResolver(): NameResolver {
     val pkg = this.findPackage() as KonanPackageFragment

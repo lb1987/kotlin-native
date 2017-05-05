@@ -1,5 +1,7 @@
 package org.jetbrains.kotlin.backend.konan.serialization
 
+import org.jetbrains.kotlin.descriptors.*
+import org.jetbrains.kotlin.serialization.deserialization.descriptors.*
 import org.jetbrains.kotlin.serialization.KonanIr
 import org.jetbrains.kotlin.serialization.KonanLinkData
 import org.jetbrains.kotlin.serialization.KonanLinkData.*
@@ -73,5 +75,24 @@ internal fun printTypeTable(proto: ProtoBuf.TypeTable) {
         printType(it)
     }
 }
+
+// -----------------------------------------------------------
+
+internal val DeclarationDescriptor.typeParameterProtos: List<ProtoBuf.TypeParameter>
+    get() = when (this) {
+        // These are different typeParameterLists not 
+        // having a common ancestor.
+        is DeserializedSimpleFunctionDescriptor
+            -> this.proto.typeParameterList
+        is DeserializedPropertyDescriptor
+            -> this.proto.typeParameterList
+        is DeserializedClassDescriptor
+            -> this.classProto.typeParameterList
+        is DeserializedTypeAliasDescriptor
+            -> this.proto.typeParameterList
+        is DeserializedClassConstructorDescriptor
+            -> listOf()
+        else -> error("Unexpected descriptor kind")
+    }
 
 
