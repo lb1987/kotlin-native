@@ -50,6 +50,12 @@ val ProtoBuf.Property.setterIr: InlineIrBody
 fun ProtoBuf.Property.Builder.setSetterIr(body: InlineIrBody): ProtoBuf.Property.Builder = 
     this.setExtension(inlineSetterIrBody, body)
 
+val ProtoBuf.Constructor.constructorIr: InlineIrBody
+    get() = this.getExtension(inlineConstructorIrBody)
+
+fun ProtoBuf.Constructor.Builder.setConstructorIr(body: InlineIrBody): ProtoBuf.Constructor.Builder  = 
+    this.setExtension(inlineConstructorIrBody, body)
+
 val ProtoBuf.Function.inlineIr: InlineIrBody
     get() = this.getExtension(inlineIrBody)
 

@@ -339,11 +339,14 @@ private val mustInlineFunctions = setOf(
     "kotlin.BooleanArray.<init>"
 )
 
+private val inlineConstructorAnnotation = FqName("konan.internal.InlineConstructor")
+
 internal val FunctionDescriptor.needsInlining: Boolean
     get() {
         val needs = this.isInline && !this.isExternal
-        if (valueParameters.size != 2)                           return needs               // Constructor must have two parameters.
-        if (mustInlineFunctions.contains(fqNameSafe.toString())) return true
+        if (valueParameters.size != 2)                              return needs            // Constructor must have two parameters.
+        if (mustInlineFunctions.contains(fqNameSafe.toString()))    return true
+        if (annotations.hasAnnotation(inlineConstructorAnnotation)) return true
         return needs
     }
 

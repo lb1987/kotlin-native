@@ -85,6 +85,9 @@ internal class KonanSerializerExtension(val context: Context, val util: KonanSer
     override fun addFunctionIR(proto: ProtoBuf.Function.Builder, serializedIR: String) 
         = proto.setInlineIr(inlineBody(serializedIR))
 
+    override fun addConstructorIR(proto: ProtoBuf.Constructor.Builder, serializedIR: String) 
+        = proto.setConstructorIr(inlineBody(serializedIR))
+
     override fun addGetterIR(proto: ProtoBuf.Property.Builder, serializedIR: String) 
         = proto.setGetterIr(inlineBody(serializedIR))
 
@@ -120,6 +123,8 @@ internal interface IrAwareExtension {
     fun serializeInlineBody(descriptor: FunctionDescriptor, typeSerializer: ((KotlinType)->Int)): String 
 
     fun addFunctionIR(proto: ProtoBuf.Function.Builder, serializedIR: String): ProtoBuf.Function.Builder
+
+    fun addConstructorIR(proto: ProtoBuf.Constructor.Builder, serializedIR: String): ProtoBuf.Constructor.Builder
 
     fun addSetterIR(proto: ProtoBuf.Property.Builder, serializedIR: String): ProtoBuf.Property.Builder
 
