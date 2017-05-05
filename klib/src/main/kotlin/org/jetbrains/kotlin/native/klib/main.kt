@@ -1,5 +1,6 @@
 package org.jetbrains.kotlin.native.klib
 
+import kotlin.system.exitProcess
 import java.io.File
 
 fun printUsage() {
@@ -12,9 +13,11 @@ fun printUsage() {
 }
 
 class Command(args: Array<String>){
-    if (args.size != 2) {
-        printUsage()
-        System.exit(0)
+    init {
+        if (args.size != 2) {
+            printUsage()
+            exitProcess(0)
+        }
     }
     val verb = args[0]
     val lib = args[1]
@@ -26,7 +29,7 @@ fun warn(text: String) {
 
 fun error(text: String) {
     println("error: $text")
-    System.exit(1)
+    exitProcess(1)
 }
 
 class Library(val name: String) {
@@ -34,11 +37,11 @@ class Library(val name: String) {
     val file = File(name)
 
     init {
-        if (!name.endsWith(".klib") {
-            warn("Expected the library name to end with '.klib'. Proceeding anyways.")
-        }
         if (!file.exists()) {
             error("Could not find '$name'.")
+        }
+        if (!name.endsWith(".klib")) {
+            warn("Expected the library name to end with '.klib'. Proceeding anyways.")
         }
     }
 
@@ -63,7 +66,7 @@ class Library(val name: String) {
 }
 
 fun main(args: Array<String>) {
-    val command = parseCommand(args)
+    val command = Command(args)
 
     val library = Library(command.lib)
 
@@ -73,6 +76,7 @@ fun main(args: Array<String>) {
         "list"      -> library.list()
         "pack"      -> library.pack()
         "unpack"    -> library.unpack()
+        else        -> error("Unknown command ${command.verb}.")
     }
 }
 
